@@ -133,152 +133,152 @@
 #+END_SRC
 * Avy
 #+BEGIN_SRC emacs-lisp
-  ;; Useed to show specific characters on screen, which one with its own id letter, allowing fast navigation
-  (use-package avy
-  :ensure t
-  :bind ("M-s" . avy-goto-char))
+;; Useed to show specific characters on screen, which one with its own id letter, allowing fast navigation
+(use-package avy
+:ensure t
+:bind ("M-s" . avy-goto-char))
 
 #+END_SRC
 
 * Company
   #+BEGIN_SRC emacs-lisp
-  ;;Installing company-mode for use with rtags
-  (use-package company
+;;Installing company-mode for use with rtags
+(use-package company
 	:ensure t
 	:init
-	(add-hook 'after-init-hook 'global-company-mode))
+(add-hook 'after-init-hook 'global-company-mode))
   #+END_SRC
 
 * Auto-complete 
   #+BEGIN_SRC emacs-lisp
-  ;;(use-package auto-complete
-  ;;  :ensure t
-  ;;  :init
-  ;;  (progn
-  ;;	(ac-config-default)
-  ;;	(global-auto-complete-mode t)
-  ;;	(setq ac-mode (delq 'python-mode ac-modes))
-  ;;	))
+;;(use-package auto-complete
+;;  :ensure t
+;;  :init
+;;  (progn
+;;	(ac-config-default)
+;;	(global-auto-complete-mode t)
+;;	(setq ac-mode (delq 'python-mode ac-modes))
+;;	))
 
-  ;; Configuring the relative numbering that's so useful for evil-mode
-  (setq display-line-numbers-type 'relative)
-  (global-display-line-numbers-mode 1)
+;; Configuring the relative numbering that's so useful for evil-mode
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
 
-  ;; Remaping the sequence C-c SPC to act as ESC to exit vim input mode and go back to normal mode
-  (global-set-key (kbd "C-c SPC")
-		  (lambda ()
-			(interactive) (evil-normal-state)))
+;; Remaping the sequence C-c SPC to act as ESC to exit vim input mode and go back to normal mode
+(global-set-key (kbd "C-c SPC")
+		(lambda ()
+		(interactive) (evil-normal-state)))
 #+END_SRC
 
 * Rtags
   #+BEGIN_SRC emacs-lisp 
-	;; ensure that we use only rtags checking
-	;; https://github.com/Andersbakken/rtags#optional-1
-	(use-package flycheck-rtags
-	  :ensure t)
+;; ensure that we use only rtags checking
+;; https://github.com/Andersbakken/rtags#optional-1
+(use-package flycheck-rtags
+	:ensure t)
 
-	(use-package company-rtags
-	  :ensure t)
+(use-package company-rtags
+	:ensure t)
 
-	(use-package rtags
-	  :ensure t
-	  :hook (c++-mode . rtags-start-process-unless-running)
-	  :config(setq rtags-path "~/.emacs.d/rtags/bin/"))
+(use-package rtags
+	:ensure t
+	:hook (c++-mode . rtags-start-process-unless-running)
+	:config(setq rtags-path "~/.emacs.d/rtags/bin/"))
 
-	(defun setup-flycheck-rtags ()
-	  (interactive)
-	  (flycheck-select-checker 'rtags)
-	  ;; RTags creates more accurate overlays.
-	  (setq-local flycheck-highlighting-mode nil)
-	  (setq-local flycheck-check-syntax-automatically nil))
+(defun setup-flycheck-rtags ()
+	(interactive)
+	(flycheck-select-checker 'rtags)
+	;; RTags creates more accurate overlays.
+	(setq-local flycheck-highlighting-mode nil)
+	(setq-local flycheck-check-syntax-automatically nil))
 
-	;; only run this if rtags is installed
-	(when (require 'rtags nil :noerror)
-	  ;; make sure you have company-mode installed
-	  (require 'company)
-	  (define-key c-mode-base-map (kbd "M-.")
-		(function rtags-find-symbol-at-point))
-	  (define-key evil-normal-state-map (kbd "M-.")
-		(function rtags-find-symbol-at-point))
-	  (define-key c-mode-base-map (kbd "M-,")
-		(function rtags-find-references-at-point))
-	  (define-key evil-normal-state-map (kbd "M-,")
-		(function rtags-find-references-at-point))
-	  ;; disable prelude's use of C-c r, as this is the rtags keyboard prefix
-	  ;;(define-key prelude-mode-map (kbd "C-c r") nil)
-	  ;; install standard rtags keybindings. Do M-. on the symbol below to
-	  ;; jump to definition and see the keybindings.
-	  (rtags-enable-standard-keybindings)
-	  ;; comment this out if you don't have or don't use helm
-	  (setq rtags-use-helm t)
-	  ;; company completion setup
-	  (setq rtags-autostart-diagnostics t)
-	  (rtags-diagnostics)
-	  (setq rtags-completions-enabled t)
-	  (push 'company-rtags company-backends)
-	  (global-company-mode)
-	  (define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
-	  (define-key evil-normal-state-map (kbd "<C-tab>") (function company-complete))
-	  ;; use rtags flycheck mode -- clang warnings shown inline
-	  (require 'flycheck-rtags)
-	  ;; c-mode-common-hook is also called by c++-mode
-	  (add-hook 'c-mode-common-hook #'setup-flycheck-rtags))
+;; only run this if rtags is installed
+(when (require 'rtags nil :noerror)
+	;; make sure you have company-mode installed
+	(require 'company)
+	(define-key c-mode-base-map (kbd "M-.")
+	(function rtags-find-symbol-at-point))
+	(define-key evil-normal-state-map (kbd "M-.")
+	(function rtags-find-symbol-at-point))
+	(define-key c-mode-base-map (kbd "M-,")
+	(function rtags-find-references-at-point))
+	(define-key evil-normal-state-map (kbd "M-,")
+	(function rtags-find-references-at-point))
+	;; disable prelude's use of C-c r, as this is the rtags keyboard prefix
+	;;(define-key prelude-mode-map (kbd "C-c r") nil)
+	;; install standard rtags keybindings. Do M-. on the symbol below to
+	;; jump to definition and see the keybindings.
+	(rtags-enable-standard-keybindings)
+	;; comment this out if you don't have or don't use helm
+	(setq rtags-use-helm t)
+	;; company completion setup
+	(setq rtags-autostart-diagnostics t)
+	(rtags-diagnostics)
+	(setq rtags-completions-enabled t)
+	(push 'company-rtags company-backends)
+	(global-company-mode)
+	(define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
+	(define-key evil-normal-state-map (kbd "<C-tab>") (function company-complete))
+	;; use rtags flycheck mode -- clang warnings shown inline
+	(require 'flycheck-rtags)
+	;; c-mode-common-hook is also called by c++-mode
+	(add-hook 'c-mode-common-hook #'setup-flycheck-rtags))
   #+END_SRC
 
 * Reveal.js
   #+BEGIN_SRC emacs-lisp
-    (use-package ox-reveal
-    :ensure ox-reveal)
+(use-package ox-reveal
+:ensure ox-reveal)
 
-    (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
-    (setq org-reveal-mathjax t)
+(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+(setq org-reveal-mathjax t)
 
-    (use-package htmlize
-    :ensure t)
+(use-package htmlize
+:ensure t)
 
   #+END_SRC
   
 * Elpy
 #+BEGIN_SRC emacs-lisp
-	(use-package elpy
-	  :ensure t
-	  :init
-	  (elpy-enable)
-	  (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
-	  )
+(use-package elpy
+	:ensure t
+	:init
+	(elpy-enable)
+	(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
+	)
 #+END_SRC
 
 * Yasnippet
   #+BEGIN_SRC emacs-lisp
-		(use-package yasnippet
-		  :ensure t
-		  :defer 3.7
-		  :hook ((lisp-interaction-mode . (lambda () (yas-minor-mode)))
-			 (emacs-lisp-mode . (lambda () (yas-minor-mode)))
-			 (org-mode . (lambda () (yas-minor-mode)))
-			 (c++-mode . (lambda () (yas-minor-mode)))
-			 (c-mode . (lambda () (yas-minor-mode)))
-			 (python-mode . (lambda () (yas-minor-mode)))))
+(use-package yasnippet
+	:ensure t
+	:defer 3.7
+	:hook ((lisp-interaction-mode . (lambda () (yas-minor-mode)))
+		(emacs-lisp-mode . (lambda () (yas-minor-mode)))
+		(org-mode . (lambda () (yas-minor-mode)))
+		(c++-mode . (lambda () (yas-minor-mode)))
+		(c-mode . (lambda () (yas-minor-mode)))
+		(python-mode . (lambda () (yas-minor-mode)))))
 
-		(use-package yasnippet-snippets
-		  :ensure t
-		  :after yasnippet
-		  :config (yas-reload-all))
+(use-package yasnippet-snippets
+	:ensure t
+	:after yasnippet
+	:config (yas-reload-all))
   #+END_SRC
 
 * Magit
   #+BEGIN_SRC emacs-lisp
-		(use-package magit
-		  :ensure t
-		  :bind ("C-x g" . 'magit-status))
+(use-package magit
+	:ensure t
+	:bind ("C-x g" . 'magit-status))
   #+END_SRC
 
 * Powerline
   #+BEGIN_SRC emacs-lisp
-		(use-package powerline
-		  :ensure t
-		  :config
-		  (powerline-center-evil-theme))
+(use-package powerline
+	:ensure t
+	:config
+	(powerline-center-evil-theme))
   #+END_SRC
 
   #+RESULTS:
@@ -286,8 +286,8 @@
 
 * PDF tools
   #+BEGIN_SRC emacs-lisp
-	(use-package pdf-tools
-	  :ensure t
-	  :config
-	  (pdf-tools-install))
+(use-package pdf-tools
+	:ensure t
+	:config
+	(pdf-tools-install))
   #+END_SRC
