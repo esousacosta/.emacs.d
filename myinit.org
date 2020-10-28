@@ -283,3 +283,11 @@
 
   #+RESULTS:
   : Loaded /home/bacamartes/.emacs.d/myinit.el
+
+* PDF tools
+  #+BEGIN_SRC emacs-lisp
+	(use-package pdf-tools
+	  :ensure t
+	  :config
+	  (pdf-tools-install))
+  #+END_SRC
