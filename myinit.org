@@ -12,29 +12,29 @@
 
 * try
 #+BEGIN_SRC emacs-lisp
-    (use-package try
-    :ensure t)
+  (use-package try
+	:ensure t)
 #+END_SRC
 
 * which key
   Brings up some help (especially with C-x)
 #+BEGIN_SRC emacs-lisp
-(use-package which-key
-:ensure t
-:config
-(which-key-mode 1))
+  (use-package which-key
+	:ensure t
+	:config
+	(which-key-mode 1))
 #+END_SRC
 
 * Org mode & Org bullets
 #+BEGIN_SRC emacs-lisp
   ;; Org-mode stuff
   (use-package org-bullets
-  :ensure t
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+	:ensure t
+	:config
+	(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
   (use-package org
-  :ensure t)
+	:ensure t)
 
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c a") 'org-agenda)
@@ -56,18 +56,17 @@
 #+BEGIN_SRC emacs-lisp
   (setq evil-want-C-i-jump nil)
   (use-package evil
-  :ensure t)
+	:ensure t)
 
   (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
+  (global-set-key (kbd "C-c i") 'indent-region)
   (evil-mode 1)
 #+END_SRC
 * Gruvbox
 #+BEGIN_SRC emacs-lisp
-
   (use-package gruvbox-theme
-  :ensure t)
+	:ensure t)
   (load-theme 'gruvbox)
-
 #+END_SRC
 * Ace window
 #+BEGIN_SRC emacs-lisp
@@ -81,63 +80,57 @@
 
   ;; Package to display numbers on each window created by doing C-x [1234]
   (use-package ace-window
-  :ensure t
-  :init
-  (progn
-  (global-set-key [remap other-window] 'ace-window)
-  (custom-set-faces
-	  '(aw-leading-char-face
-	  ((t (:inherit ace-jump-face-foreground :height 2.0)))))
-  ))
+	:ensure t
+	:init
+	(progn
+	  (global-set-key [remap other-window] 'ace-window)
+	  (custom-set-faces
+	   '(aw-leading-char-face
+		 ((t (:inherit ace-jump-face-foreground :height 2.0)))))
+	  ))
 #+END_SRC
 * Counsel
 #+BEGIN_SRC emacs-lisp
-
   ;; Used for enchanced searching (Swiper) and counsel is a dependency of Swiper.
-
   (use-package counsel
-  :ensure t
-  )
+	:ensure t
+	)
 #+END_SRC
 * Ivy
 #+BEGIN_SRC emacs-lisp
-
   (use-package ivy
-  :ensure t
-  :diminish (ivy-mode)
-  :bind ("C-x b" . ivy-switch-buffer)
-  :config
-  (progn
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-display-style 'fancy)))
-
+	:ensure t
+	:diminish (ivy-mode)
+	:bind ("C-x b" . ivy-switch-buffer)
+	:config
+	(progn
+	  (ivy-mode 1)
+	  (setq ivy-use-virtual-buffers t)
+	  (setq ivy-display-style 'fancy)))
 #+END_SRC
 * Swiper
 #+BEGIN_SRC emacs-lisp
   ;; Making searches easier
   (use-package swiper
-  :ensure try
-  :bind (("C-s" . swiper)
-	  ("C-r" . swiper)
-	  ("C-c C-r" . ivy-resume)
-	  ("M-x" . counsel-M-x)
-	  ("C-x C-f" . counsel-find-file))
-  :config
-  (progn
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-display-style 'fancy)
-  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-  ))
+	:ensure try
+	:bind (("C-s" . swiper)
+		   ("C-r" . swiper)
+		   ("C-c C-r" . ivy-resume)
+		   ("M-x" . counsel-M-x)
+		   ("C-x C-f" . counsel-find-file))
+	:config
+	(ivy-mode 1)
+	(setq ivy-use-virtual-buffers t)
+	(setq ivy-display-style 'fancy)
+	(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+	)
 #+END_SRC
 * Avy
 #+BEGIN_SRC emacs-lisp
-;; Useed to show specific characters on screen, which one with its own id letter, allowing fast navigation
-(use-package avy
-:ensure t
-:bind ("M-s" . avy-goto-char))
-
+  ;; Useed to show specific characters on screen, which one with its own id letter, allowing fast navigation
+  (use-package avy
+	:ensure t
+	:bind ("M-s" . avy-goto-char))
 #+END_SRC
 
 * Company
