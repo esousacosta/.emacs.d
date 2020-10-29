@@ -1,4 +1,4 @@
-#+STARTIP: overview
+#+STARTUP: overview
 * Interface tweaks
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-message t)
@@ -50,6 +50,7 @@
   ;; find org*/*.elc -print0 | xargs -0 rm
   ;; to fix some errors.
   (setq org-archive-location "~/Documents/TODOs/archive.org::")
+  (setq org-startup-folded t)
 #+END_SRC
 
 * Evil mode
