@@ -58,12 +58,17 @@
 #+BEGIN_SRC emacs-lisp
   (setq evil-want-C-i-jump nil)
   (use-package evil
-	:ensure t)
+    :ensure t)
 
   (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
+  (define-key evil-normal-state-map (kbd "C-ç") 'evil-end-of-line)
   (global-set-key (kbd "C-c i") 'indent-region)
   (evil-mode 1)
 #+END_SRC
+
+#+RESULTS:
+: t
+
 * Gruvbox
 #+BEGIN_SRC emacs-lisp
   (use-package gruvbox-theme
