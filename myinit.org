@@ -51,6 +51,7 @@
   ;; to fix some errors.
   (setq org-archive-location "~/Documents/TODOs/archive.org::")
   (setq org-startup-folded t)
+  (setq org-startup-indented t)
 #+END_SRC
 
 * Evil mode
