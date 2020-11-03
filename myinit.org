@@ -275,17 +275,12 @@
 	:bind ("C-x g" . 'magit-status))
   #+END_SRC
 
-* Powerline
-  #+BEGIN_SRC emacs-lisp
-(use-package powerline
-	:ensure t
-	:config
-	(powerline-center-evil-theme))
-  #+END_SRC
-
-  #+RESULTS:
-  : Loaded /home/bacamartes/.emacs.d/myinit.el
-
+* Doom-modeline
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1))
+#+END_SRC
 * PDF tools
   #+BEGIN_SRC emacs-lisp
 (use-package pdf-tools
