@@ -277,6 +277,9 @@
 
 * Doom-modeline
 #+BEGIN_SRC emacs-lisp
+  ;;Installing a few depndencies
+  (use-package all-the-icons)
+
   (use-package doom-modeline
     :ensure t
     :init (doom-modeline-mode 1))
