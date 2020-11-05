@@ -310,8 +310,8 @@
 
   (setq mu4e-maildir (expand-file-name "~/Maildir"))
 
-  (setq mu4e-drafts-folder "/acc1-gmail/[acc1].drafts")
   (setq mu4e-sent-folder   "/acc1-gmail/[acc1].Sent Mail")
+  (setq mu4e-drafts-folder "/acc1-gmail/[acc1].Drafts")
   (setq mu4e-trash-folder  "/acc1-gmail/[acc1].Trash")
   (setq message-signature-file "~/.emacs.d/.signature") ; put your signature in this file
 
@@ -342,7 +342,7 @@
            ("/acc1-gmail/[acc1].Trash"       . ?t)
            ("/acc1-gmail/[acc1].All Mail"    . ?a)
            ("/acc1-gmail/[acc1].Starred"	   . ?r)
-           ("/acc1-gmail/[acc1].drafts"	   . ?d)))
+           ("/acc1-gmail/[acc1].Drafts"	   . ?d)))
 
   ;; enable inline images
   ;; This only works when w3m is not activated
@@ -374,5 +374,6 @@
   (setq org-mu4e-convert-to-html t)
 
   (setq mu4e-change-filenames-when-moving t)
+  (setq mu4e-headers-skip-duplicates nil) ;; this line is needed for drafts to show properly
   (mu4e t)
 #+END_SRC
