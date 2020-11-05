@@ -300,19 +300,19 @@
   ; smtp
   (setq message-send-mail-function 'smtpmail-send-it
         smtpmail-starttls-credentials
-        '(("smtp.gmail.com" 465 nil nil))
+        '(("smtp.gmail.com" 587 nil nil))
         smtpmail-default-smtp-server "smtp.gmail.com"
         smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 465
+        smtpmail-smtp-service 587
         smtpmail-debug-info t)
 
   (require 'mu4e)
 
-  (setq mu4e-maildir (expand-file-name "~/Maildir/acc1-gmail"))
+  (setq mu4e-maildir (expand-file-name "~/Maildir"))
 
-  (setq mu4e-drafts-folder "/[acc1].drafts")
-  (setq mu4e-sent-folder   "/[acc1].Sent Mail")
-  (setq mu4e-trash-folder  "/[acc1].Trash")
+  (setq mu4e-drafts-folder "/acc1-gmail/[acc1].drafts")
+  (setq mu4e-sent-folder   "/acc1-gmail/[acc1].Sent Mail")
+  (setq mu4e-trash-folder  "/acc1-gmail/[acc1].Trash")
   (setq message-signature-file "~/.emacs.d/.signature") ; put your signature in this file
 
   ; get mail
@@ -337,7 +337,7 @@
   (local-set-key (kbd "<backtab>") 'shr-previous-link)))
 
   (setq mu4e-maildir-shortcuts
-        '( ("/acc1-gmail/INBOX"               . ?i)
+        '( ("/acc1-gmail/[acc1].Inbox"               . ?i)
            ("/acc1-gmail/[acc1].Sent Mail"   . ?s)
            ("/acc1-gmail/[acc1].Trash"       . ?t)
            ("/acc1-gmail/[acc1].All Mail"    . ?a)
@@ -372,4 +372,7 @@
 
   ;; convert org mode to HTML automatically
   (setq org-mu4e-convert-to-html t)
+
+  (setq mu4e-change-filenames-when-moving t)
+  (mu4e t)
 #+END_SRC
