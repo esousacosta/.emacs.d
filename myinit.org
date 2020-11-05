@@ -344,8 +344,9 @@
            ("/acc1-gmail/[acc1].Starred"	   . ?r)
            ("/acc1-gmail/[acc1].drafts"	   . ?d)))
 
-  ;; show images
-  (setq mu4e-show-images t)
+  ;; enable inline images
+  ;; This only works when w3m is not activated
+  (setq mu4e-view-show-images t)
 
   ;; use imagemagick, if available
   (when (fboundp 'imagemagick-register-types)
