@@ -29,12 +29,15 @@
 #+BEGIN_SRC emacs-lisp
   ;; Org-mode stuff
   (use-package org-bullets
-	:ensure t
-	:config
-	(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
   (use-package org
-	:ensure t)
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook (lambda () (visual-line-mode 1))))
+
 
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c a") 'org-agenda)
@@ -42,7 +45,7 @@
 
   ;; Adding timestamps and other states for tasks in TODO liss
   (setq org-todo-keywords
-		'((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+        '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
 
   ;; Changed the location to save archived task (C-c C-x C-s) or (C-c $)
   ;; had to run:
@@ -322,25 +325,10 @@
   (setq org-mime-library 'mml)
 
   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
-  ;;(require 'smtpmail)
-
-  ; smtp
-  ;;(setq message-send-mail-function 'smtpmail-send-it
-  ;;      smtpmail-starttls-credentials
-  ;;      '(("smtp.gmail.com" 587 nil nil))
-  ;;      smtpmail-default-smtp-server "smtp.gmail.com"
-  ;;      smtpmail-smtp-server "smtp.gmail.com"
-  ;;      smtpmail-smtp-service 587
-  ;;      smtpmail-debug-info t)
 
   (require 'mu4e)
 
   (setq mu4e-maildir (expand-file-name "~/Maildir"))
-
-  ;;(setq mu4e-sent-folder   "/acc1-gmail/[acc1].Sent Mail")
-  ;;(setq mu4e-drafts-folder "/acc1-gmail/[acc1].Drafts")
-  ;;(setq mu4e-trash-folder  "/acc1-gmail/[acc1].Trash")
-  ;;(setq message-signature-file "~/.emacs.d/.signature") ; put your signature in this file
 
   ; get mail
   (setq mu4e-get-mail-command "mbsync -c ~/.emacs.d/.mbsyncrc -a"
@@ -357,11 +345,6 @@
   (set-default-coding-systems 'utf-8)
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
-  ;;(setq coding-system-for-read 'utf-8)
-  ;;(setq coding-system-for-write 'utf-8)
-
-  ;;(setq process-coding-system-alist nil)
-  ;;(setq default-process-coding-system '(utf-8 . utf-8))
 
   ;; Enable images in w3m
   ;; currently not used
@@ -389,14 +372,6 @@
   (local-set-key (kbd "<RET>") 'mu4e~view-browse-url-from-binding)
   (local-set-key (kbd "<tab>") 'shr-next-link)
   (local-set-key (kbd "<backtab>") 'shr-previous-link)))
-
-  ;;(setq mu4e-maildir-shortcuts
-  ;;      '( ("/acc1-gmail/[acc1].Inbox"               . ?i)
-  ;;         ("/acc1-gmail/[acc1].Sent Mail"   . ?s)
-  ;;         ("/acc1-gmail/[acc1].Trash"       . ?t)
-  ;;         ("/acc1-gmail/[acc1].All Mail"    . ?a)
-  ;;         ("/acc1-gmail/[acc1].Starred"	   . ?r)
-  ;;         ("/acc1-gmail/[acc1].Drafts"	   . ?d)))
 
   ;; Speeding up email retrieval and update
   (setq
@@ -431,9 +406,10 @@
   (add-hook 'mu4e-compose-mode-hook
       (defun my-do-compose-stuff ()
          "My settings for message composition."
-         (visual-line-mode)
+         (visual-line-mode 1)
          (org-mu4e-compose-org-mode)
              (use-hard-newlines -1)
+         (set-fill-column 72)
          (flyspell-mode)))
 
 
@@ -471,8 +447,9 @@
           (smtpmail-queue-dir . "~/Maildir/acc1-gmail/queue/cur")
           (message-send-mail-function . smtpmail-send-it)
           (smtpmail-smtp-user . "emanoel.desousacosta@gmail.com")
-          (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-          (smtpmail-auth-credentials . (expand-file-name "~/.emacs.d/.authinfo.gpg"))
+          ;; These two lines are no longer used, and onde must keep the .authinfo.gpg file with the cred for all accs in their ~/ dir
+          ;;(smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+          ;;(smtpmail-auth-credentials . (expand-file-name "~/.emacs.d/.authinfo.gpg"))
           (smtpmail-default-smtp-server . "smtp.gmail.com")
           (smtpmail-smtp-server . "smtp.gmail.com")
           (smtpmail-smtp-service . 587)
@@ -484,7 +461,41 @@
                       ("/acc1-gmail/[acc1].All Mail"  . ?a)
                       ("/acc1-gmail/[acc1].Starred"   . ?r)
                       ("/acc1-gmail/[acc1].Drafts"    . ?d)
+                      ))))
+     (make-mu4e-context
+      :name "vic23" ;;for acc1-gmail
+      :enter-func (lambda () (mu4e-message "Entering context vic23"))
+      :leave-func (lambda () (mu4e-message "Leaving context vic23"))
+      :match-func (lambda (msg)
+            (when msg
+          (mu4e-message-contact-field-matches
+           msg '(:from :to :cc :bcc) "victoremanoel23@gmail.com")))
+      :vars '((user-mail-address . "victoremanoel23@gmail.com")
+          (user-full-name . "Emanoel de Sousa Costa")
+          (mu4e-sent-folder . "/acc2-gmail/[acc2].Sent Mail")
+          (mu4e-drafts-folder . "/acc2-gmail/[acc2].Drafts")
+          (mu4e-trash-folder . "/acc2-gmail/[acc2].Trash")
+          (message-signature-file . "~/.emacs.d/.signature") ; put your signature in this file
+          (mu4e-compose-format-flowed . t)
+          (smtpmail-queue-dir . "~/Maildir/acc2-gmail/queue/cur")
+          (message-send-mail-function . smtpmail-send-it)
+          (smtpmail-smtp-user . "victoremanoel23@gmail.com")
+          ;; These two lines are no longer used, and onde must keep the .authinfo.gpg file with the cred for all accs in their ~/ dir
+          ;;(smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+          ;;(smtpmail-auth-credentials . (expand-file-name "~/.emacs.d/.authinfo_2.gpg"))
+          (smtpmail-default-smtp-server . "smtp.gmail.com")
+          (smtpmail-smtp-server . "smtp.gmail.com")
+          (smtpmail-smtp-service . 587)
+          (smtpmail-debug-info . t)
+          ;;(smtpmail-debug-verbose . t)
+          (mu4e-maildir-shortcuts . ( ("/acc2-gmail/[acc2].Inbox"            . ?i)
+                      ("/acc2-gmail/[acc2].Sent Mail" . ?s)
+                      ("/acc2-gmail/[acc2].Trash"       . ?t)
+                      ("/acc2-gmail/[acc2].All Mail"  . ?a)
+                      ("/acc2-gmail/[acc2].Starred"   . ?r)
+                      ("/acc2-gmail/[acc2].Drafts"    . ?d)
                       ))))))
+
 
   (require 'org-mu4e)
 
@@ -524,6 +535,7 @@
     ;; Only notify for "interesting" (non-trashed) new emails:
     (setq mu4e-alert-interesting-mail-query
           (concat
-           "flag:unread maildir:/acc1-gmail/[acc1].Inbox"
+           ;;"flag:unread maildir:/acc1-gmail/[acc1].Inbox"
+           "flag:unread and maildir:/Inbox/"
            " AND NOT flag:trashed")))
 #+END_SRC
