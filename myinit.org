@@ -294,7 +294,6 @@
 	:config
 	(pdf-tools-install))
   #+END_SRC
-
 * w3m
 #+begin_src emacs-lisp
   (use-package w3m
@@ -538,4 +537,15 @@
            ;;"flag:unread maildir:/acc1-gmail/[acc1].Inbox"
            "flag:unread and maildir:/Inbox/"
            " AND NOT flag:trashed")))
+#+END_SRC
+
+* SLIME
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/Downloads/Programs/SLIME/slime/")
+  (require 'slime)
+  (add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
+  (add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))
+  ;;(require 'slime-autoloads)
+  ;; Setting the location for my CL compiler
+  (setq inferior-lisp-program "/usr/bin/sbcl")
 #+END_SRC
