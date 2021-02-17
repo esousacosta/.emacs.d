@@ -36,7 +36,8 @@
   (use-package org
     :ensure t
     :config
-    (add-hook 'org-mode-hook (lambda () (visual-line-mode 1))))
+    (add-hook 'org-mode-hook (lambda () (visual-line-mode 1))
+    (add-hook 'org-mode-hook 'turn-on-org-cdlatex)))
 
 
   (global-set-key (kbd "C-c l") 'org-store-link)
@@ -55,8 +56,21 @@
   (setq org-archive-location "~/Documents/TODOs/archive.org::")
   (setq org-startup-folded t)
   (setq org-startup-indented t)
+  (setq org-export-latex-hyperref-format "\\ref{%s}")
+
 #+END_SRC
 
+* Auctex
+#+BEGIN_SRC emacs-lisp
+  (use-package auctex
+    :defer t
+    :ensure t)
+#+END_SRC
+* CDLaTeX
+#+BEGIN_SRC emacs-lisp
+  (use-package cdlatex
+    :ensure t)
+#+END_SRC
 * Evil mode
 #+BEGIN_SRC emacs-lisp
   (setq evil-want-C-i-jump nil)
@@ -71,15 +85,13 @@
   (evil-mode 1)
 #+END_SRC
 
-#+RESULTS:
-: t
-
 * Gruvbox
 #+BEGIN_SRC emacs-lisp
   (use-package gruvbox-theme
 	:ensure t)
   (load-theme 'gruvbox)
 #+END_SRC
+
 * Ace window
 #+BEGIN_SRC emacs-lisp
   ;; This is no longer needed since we installed Swiper
@@ -101,6 +113,7 @@
 		 ((t (:inherit ace-jump-face-foreground :height 2.0)))))
 	  ))
 #+END_SRC
+
 * Counsel
 #+BEGIN_SRC emacs-lisp
   ;; Used for enchanced searching (Swiper) and counsel is a dependency of Swiper.
@@ -108,6 +121,7 @@
 	:ensure t
 	)
 #+END_SRC
+
 * Ivy
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
@@ -120,6 +134,7 @@
 	  (setq ivy-use-virtual-buffers t)
 	  (setq ivy-display-style 'fancy)))
 #+END_SRC
+
 * Swiper
 #+BEGIN_SRC emacs-lisp
   ;; Making searches easier
@@ -137,6 +152,7 @@
 	(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 	)
 #+END_SRC
+
 * Avy
 #+BEGIN_SRC emacs-lisp
   ;; Useed to show specific characters on screen, which one with its own id letter, allowing fast navigation
@@ -147,11 +163,14 @@
 
 * Company
   #+BEGIN_SRC emacs-lisp
-;;Installing company-mode for use with rtags
-(use-package company
-	:ensure t
-	:init
-(add-hook 'after-init-hook 'global-company-mode))
+    ;;Installing company-mode for use with eglot
+    (use-package company
+        :ensure t
+        :config
+        (setq company-idle-delay 0)
+        :init
+        (add-hook 'after-init-hook 'global-company-mode))
+
   #+END_SRC
 
 * Auto-complete 
@@ -174,61 +193,6 @@
 		(lambda ()
 		(interactive) (evil-normal-state)))
 #+END_SRC
-
-* Rtags
-  #+BEGIN_SRC emacs-lisp 
-;; ensure that we use only rtags checking
-;; https://github.com/Andersbakken/rtags#optional-1
-(use-package flycheck-rtags
-	:ensure t)
-
-(use-package company-rtags
-	:ensure t)
-
-(use-package rtags
-	:ensure t
-	:hook (c++-mode . rtags-start-process-unless-running)
-	:config(setq rtags-path "~/.emacs.d/rtags/bin/"))
-
-(defun setup-flycheck-rtags ()
-	(interactive)
-	(flycheck-select-checker 'rtags)
-	;; RTags creates more accurate overlays.
-	(setq-local flycheck-highlighting-mode nil)
-	(setq-local flycheck-check-syntax-automatically nil))
-
-;; only run this if rtags is installed
-(when (require 'rtags nil :noerror)
-	;; make sure you have company-mode installed
-	(require 'company)
-	(define-key c-mode-base-map (kbd "M-.")
-	(function rtags-find-symbol-at-point))
-	(define-key evil-normal-state-map (kbd "M-.")
-	(function rtags-find-symbol-at-point))
-	(define-key c-mode-base-map (kbd "M-,")
-	(function rtags-find-references-at-point))
-	(define-key evil-normal-state-map (kbd "M-,")
-	(function rtags-find-references-at-point))
-	;; disable prelude's use of C-c r, as this is the rtags keyboard prefix
-	;;(define-key prelude-mode-map (kbd "C-c r") nil)
-	;; install standard rtags keybindings. Do M-. on the symbol below to
-	;; jump to definition and see the keybindings.
-	(rtags-enable-standard-keybindings)
-	;; comment this out if you don't have or don't use helm
-	(setq rtags-use-helm t)
-	;; company completion setup
-	(setq rtags-autostart-diagnostics t)
-	(rtags-diagnostics)
-	(setq rtags-completions-enabled t)
-	(push 'company-rtags company-backends)
-	(global-company-mode)
-	(define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
-	(define-key evil-normal-state-map (kbd "<C-tab>") (function company-complete))
-	;; use rtags flycheck mode -- clang warnings shown inline
-	(require 'flycheck-rtags)
-	;; c-mode-common-hook is also called by c++-mode
-	(add-hook 'c-mode-common-hook #'setup-flycheck-rtags))
-  #+END_SRC
 
 * Reveal.js
   #+BEGIN_SRC emacs-lisp
@@ -277,7 +241,6 @@
 	:ensure t
 	:bind ("C-x g" . 'magit-status))
   #+END_SRC
-
 * Doom-modeline
 #+BEGIN_SRC emacs-lisp
   ;;Installing a few depndencies
@@ -549,3 +512,10 @@
   ;; Setting the location for my CL compiler
   (setq inferior-lisp-program "/usr/bin/sbcl")
 #+END_SRC
+* Eglot
+#+begin_src emacs-lisp
+  (use-package eglot :ensure t)
+  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd-11"))
+  (add-hook 'c-mode-hook 'eglot-ensure)
+  (add-hook 'c++-mode-hook 'eglot-ensure)
+#+end_src
