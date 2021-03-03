@@ -58,6 +58,13 @@
   (setq org-startup-indented t)
   (setq org-export-latex-hyperref-format "\\ref{%s}")
 
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-c DEL") 'org-table-blank-field)))
+
+  (define-key org-mode-map (kbd "C-c SPC")
+    (lambda () 
+      (interactive) (evil-normal-state))) 
 #+END_SRC
 
 * Auctex
