@@ -93,11 +93,14 @@
   (evil-mode 1)
 #+END_SRC
 
-* Gruvbox
+* Spacemacs
 #+BEGIN_SRC emacs-lisp
-  (use-package gruvbox-theme
-	:ensure t)
-  (load-theme 'gruvbox)
+  (use-package spacemacs-theme
+    :defer t
+    :init
+    (load-theme 'spacemacs-dark t)
+    (setq spacemacs-theme-org-agenda-height nil)
+    (setq spacemacs-theme-org-height nil))
 #+END_SRC
 
 * Ace window
