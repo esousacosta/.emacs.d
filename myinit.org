@@ -90,6 +90,8 @@
   (define-key evil-normal-state-map (kbd "C-c b") (kbd "dibi( ) C-c SPC h p")) ;; This line allow surrounding the contents of a parenthesis
   (define-key evil-normal-state-map (kbd "C-c w") (kbd "diwi( ) C-c SPC h p")) ;; This line allow surrounding the contents of a parenthesis
   (global-set-key (kbd "C-c i") 'indent-region)
+  (define-key evil-normal-state-map (kbd "g d") 'xref-find-definitions)
+  (define-key evil-normal-state-map (kbd "C-c g d") 'xref-find-definitions-other-window)
   (evil-mode 1)
 #+END_SRC
 
