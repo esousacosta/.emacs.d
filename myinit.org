@@ -39,6 +39,8 @@
     (add-hook 'org-mode-hook (lambda () (visual-line-mode 1))
     (add-hook 'org-mode-hook 'turn-on-org-cdlatex)))
 
+  (setq org-log-done t)
+  (setq org-agenda-files '("~/todo.org"))
 
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c a") 'org-agenda)
@@ -84,25 +86,39 @@
   (use-package evil
     :ensure t)
 
+  (define-key evil-ex-map "W" 'save-buffer)
+
   (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
   (define-key evil-normal-state-map (kbd "C-ç") 'evil-end-of-line)
+  (define-key evil-normal-state-map (kbd "C-c '") 'comment-region)
   (define-key evil-normal-state-map (kbd "C-c u") 'uncomment-region)
   (define-key evil-normal-state-map (kbd "C-c b") (kbd "dibi( ) C-c SPC h p")) ;; This line allow surrounding the contents of a parenthesis
   (define-key evil-normal-state-map (kbd "C-c w") (kbd "diwi( ) C-c SPC h p")) ;; This line allow surrounding the contents of a parenthesis
   (global-set-key (kbd "C-c i") 'indent-region)
   (define-key evil-normal-state-map (kbd "g d") 'xref-find-definitions)
   (define-key evil-normal-state-map (kbd "C-c g d") 'xref-find-definitions-other-window)
+  (define-key evil-normal-state-map (kbd "C-c y") 'yas-insert-snippet)
+  (define-key evil-normal-state-map (kbd "C-e") 'evil-end-of-line)
+  (define-key global-map (kbd "C-c SPC")
+    (lambda () 
+      (interactive) (evil-normal-state))) 
   (evil-mode 1)
 #+END_SRC
 
-* Spacemacs
+* Emacs-theme
 #+BEGIN_SRC emacs-lisp
-  (use-package spacemacs-theme
-    :defer t
-    :init
-    (load-theme 'spacemacs-dark t)
-    (setq spacemacs-theme-org-agenda-height nil)
-    (setq spacemacs-theme-org-height nil))
+  (use-package monokai-theme
+    :config
+    (load-theme 'monokai t))
+  ;; I left this here just in case of regrets
+  ;; (use-package spacemacs-theme
+  ;;   :defer t
+  ;;   :init
+  ;;   (load-theme 'spacemacs-dark t)
+  ;;   (setq spacemacs-theme-org-agenda-height nil)
+  ;;   (setq spacemacs-theme-org-height nil))
+  (add-to-list 'default-frame-alist
+               '(font . "Monospace-12"))
 #+END_SRC
 
 * Ace window
@@ -240,6 +256,7 @@
 		(org-mode . (lambda () (yas-minor-mode)))
 		(c++-mode . (lambda () (yas-minor-mode)))
 		(c-mode . (lambda () (yas-minor-mode)))
+		(arduino-mode . (lambda () (yas-minor-mode)))
 		(python-mode . (lambda () (yas-minor-mode)))))
 
 (use-package yasnippet-snippets
@@ -292,228 +309,228 @@
   (setq browse-url-browser-function 'browse-url-generic)
   (setq browse-url-generic-program "firefox")
 #+end_src
-* Mu4e
-#+BEGIN_SRC emacs-lisp
-  (use-package org-mime
-    :ensure t)
+# * Mu4e
+# #+BEGIN_SRC emacs-lisp
+#   (use-package org-mime
+#     :ensure t)
 
-  (setq org-mime-library 'mml)
+#   (setq org-mime-library 'mml)
 
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+#   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
 
-  (require 'mu4e)
+#   (require 'mu4e)
 
-  (setq mu4e-maildir (expand-file-name "~/Maildir"))
+#   (setq mu4e-maildir (expand-file-name "~/Maildir"))
 
-  ; get mail
-  (setq mu4e-get-mail-command "mbsync -c ~/.emacs.d/.mbsyncrc -a"
-        ;;mu4e-html2text-command "w3m -dump -I utf-8 -O utf-8 -T text/html"
-        mu4e-view-prefer-html t
-        mu4e-update-interval 120
-        mu4e-headers-auto-update t
-        mu4e-compose-signature-auto-include nil
-        mu4e-use-fancy-chars t
-        mu4e-compose-format-flowed t)
+#   ; get mail
+#   (setq mu4e-get-mail-command "mbsync -c ~/.emacs.d/.mbsyncrc -a"
+#         ;;mu4e-html2text-command "w3m -dump -I utf-8 -O utf-8 -T text/html"
+#         mu4e-view-prefer-html t
+#         mu4e-update-interval 120
+#         mu4e-headers-auto-update t
+#         mu4e-compose-signature-auto-include nil
+#         mu4e-use-fancy-chars t
+#         mu4e-compose-format-flowed t)
 
-  ;; set UTF-8 as default encoding
-  (prefer-coding-system 'utf-8)
-  (set-default-coding-systems 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
+#   ;; set UTF-8 as default encoding
+#   (prefer-coding-system 'utf-8)
+#   (set-default-coding-systems 'utf-8)
+#   (set-terminal-coding-system 'utf-8)
+#   (set-keyboard-coding-system 'utf-8)
 
-  ;; Enable images in w3m
-  ;; currently not used
-  (setq w3m-default-display-inline-images t)
-  ;;(defun mu4e-action-view-in-w3m ()
-  (defun mu4e-action-view-in-w3m (msg)
-    "View the body of the message in emacs w3m."
-    (interactive)
-    (w3m-browse-url (concat "file://"
-                (mu4e~write-body-to-html msg))))
-                ;;(mu4e~write-body-to-html (mu4e-message-at-point t)))))
+#   ;; Enable images in w3m
+#   ;; currently not used
+#   (setq w3m-default-display-inline-images t)
+#   ;;(defun mu4e-action-view-in-w3m ()
+#   (defun mu4e-action-view-in-w3m (msg)
+#     "View the body of the message in emacs w3m."
+#     (interactive)
+#     (w3m-browse-url (concat "file://"
+#                 (mu4e~write-body-to-html msg))))
+#                 ;;(mu4e~write-body-to-html (mu4e-message-at-point t)))))
 
-  ;; allows me to open the message in the browser
-  ;; which in turn lets me see inline images
-  (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+#   ;; allows me to open the message in the browser
+#   ;; which in turn lets me see inline images
+#   (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-  ;; for rich-text to be more readable in dark-themed emacs
-  (setq shr-color-visible-luminance-min 80)
-
-
-  ;; <tab> to navigate to links, <RET> to open them in browser
-  (add-hook 'mu4e-view-mode-hook
-    (lambda()
-  ;; try to emulate some of the eww key-bindings
-  (local-set-key (kbd "<RET>") 'mu4e~view-browse-url-from-binding)
-  (local-set-key (kbd "<tab>") 'shr-next-link)
-  (local-set-key (kbd "<backtab>") 'shr-previous-link)))
-
-  ;; Speeding up email retrieval and update
-  (setq
-    mu4e-index-cleanup nil      ;; don't do a full cleanup check
-    mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
-
-  ;; enable inline images
-  ;; This only works when w3m is not activated
-  (setq mu4e-view-show-images t)
-
-  ;; use imagemagick, if available
-  (when (fboundp 'imagemagick-register-types)
-    (imagemagick-register-types))
-
-  ;; general emacs mail settings; used when composing e-mail
-  ;; the non-mu4e-* stuff is inherited from emacs/message-mode
-  ;;(setq mu4e-reply-to-address "emanoel.desousacosta@gmail.com"
-  ;;    user-mail-address "emanoel.desousacosta@gmail.com"
-  ;;    user-full-name  "Emanoel de Sousa Costa")
-
-  ;; don't save message to Sent Messages, IMAP takes care of this
-  ; (setq mu4e-sent-messages-behavior 'delete)
-
-  ;; spell check
-  ;;(add-hook 'mu4e-compose-mode-hook
-  ;;        (defun my-do-compose-stuff ()
-  ;;           "My settings for message composition."
-  ;;           (set-fill-column 72)
-  ;;           (flyspell-mode)))
-
-  ;; spell check
-  (add-hook 'mu4e-compose-mode-hook
-      (defun my-do-compose-stuff ()
-         "My settings for message composition."
-         (visual-line-mode 1)
-         (org-mu4e-compose-org-mode)
-             (use-hard-newlines -1)
-         (set-fill-column 72)
-         (flyspell-mode)))
+#   ;; for rich-text to be more readable in dark-themed emacs
+#   (setq shr-color-visible-luminance-min 80)
 
 
-  (require 'smtpmail)
-  ;;from the info manual
-  (setq mu4e-attachment-dir  "~/Downloads")
+#   ;; <tab> to navigate to links, <RET> to open them in browser
+#   (add-hook 'mu4e-view-mode-hook
+#     (lambda()
+#   ;; try to emulate some of the eww key-bindings
+#   (local-set-key (kbd "<RET>") 'mu4e~view-browse-url-from-binding)
+#   (local-set-key (kbd "<tab>") 'shr-next-link)
+#   (local-set-key (kbd "<backtab>") 'shr-previous-link)))
 
-  ;;from vxlabs config
-  ;; show full addresses in view message (instead of just names)
-  ;; toggle per name with M-RET
-  (setq mu4e-view-show-addresses 't)
+#   ;; Speeding up email retrieval and update
+#   (setq
+#     mu4e-index-cleanup nil      ;; don't do a full cleanup check
+#     mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
 
-  ;; don't ask when quitting
-  (setq mu4e-confirm-quit nil)
-  ;; mu4e-context
-  (setq mu4e-context-policy 'pick-first)
-  (setq mu4e-compose-context-policy 'always-ask)
-  (setq mu4e-contexts
-    (list
-     (make-mu4e-context
-      :name "college" ;;for acc1-gmail
-      :enter-func (lambda () (mu4e-message "Entering context college"))
-      :leave-func (lambda () (mu4e-message "Leaving context college"))
-      :match-func (lambda (msg)
-            (when msg
-          (mu4e-message-contact-field-matches
-           msg '(:from :to :cc :bcc) "emanoel.desousacosta@gmail.com")))
-      :vars '((user-mail-address . "emanoel.desousacosta@gmail.com")
-          (user-full-name . "Emanoel de Sousa Costa")
-          (mu4e-sent-folder . "/acc1-gmail/[acc1].Sent Mail")
-          (mu4e-drafts-folder . "/acc1-gmail/[acc1].Drafts")
-          (mu4e-trash-folder . "/acc1-gmail/[acc1].Trash")
-          (message-signature-file . "~/.emacs.d/.signature") ; put your signature in this file
-          (mu4e-compose-format-flowed . t)
-          (smtpmail-queue-dir . "~/Maildir/acc1-gmail/queue/cur")
-          (message-send-mail-function . smtpmail-send-it)
-          (smtpmail-smtp-user . "emanoel.desousacosta@gmail.com")
-          ;; These two lines are no longer used, and onde must keep the .authinfo.gpg file with the cred for all accs in their ~/ dir
-          ;;(smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-          ;;(smtpmail-auth-credentials . (expand-file-name "~/.emacs.d/.authinfo.gpg"))
-          (smtpmail-default-smtp-server . "smtp.gmail.com")
-          (smtpmail-smtp-server . "smtp.gmail.com")
-          (smtpmail-smtp-service . 587)
-          (smtpmail-debug-info . t)
-          ;;(smtpmail-debug-verbose . t)
-          (mu4e-maildir-shortcuts . ( ("/acc1-gmail/[acc1].Inbox"            . ?i)
-                      ("/acc1-gmail/[acc1].Sent Mail" . ?s)
-                      ("/acc1-gmail/[acc1].Trash"       . ?t)
-                      ("/acc1-gmail/[acc1].All Mail"  . ?a)
-                      ("/acc1-gmail/[acc1].Starred"   . ?r)
-                      ("/acc1-gmail/[acc1].Drafts"    . ?d)
-                      ))))
-     (make-mu4e-context
-      :name "vic23" ;;for acc1-gmail
-      :enter-func (lambda () (mu4e-message "Entering context vic23"))
-      :leave-func (lambda () (mu4e-message "Leaving context vic23"))
-      :match-func (lambda (msg)
-            (when msg
-          (mu4e-message-contact-field-matches
-           msg '(:from :to :cc :bcc) "victoremanoel23@gmail.com")))
-      :vars '((user-mail-address . "victoremanoel23@gmail.com")
-          (user-full-name . "Emanoel de Sousa Costa")
-          (mu4e-sent-folder . "/acc2-gmail/[acc2].Sent Mail")
-          (mu4e-drafts-folder . "/acc2-gmail/[acc2].Drafts")
-          (mu4e-trash-folder . "/acc2-gmail/[acc2].Trash")
-          (message-signature-file . "~/.emacs.d/.signature") ; put your signature in this file
-          (mu4e-compose-format-flowed . t)
-          (smtpmail-queue-dir . "~/Maildir/acc2-gmail/queue/cur")
-          (message-send-mail-function . smtpmail-send-it)
-          (smtpmail-smtp-user . "victoremanoel23@gmail.com")
-          ;; These two lines are no longer used, and onde must keep the .authinfo.gpg file with the cred for all accs in their ~/ dir
-          ;;(smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-          ;;(smtpmail-auth-credentials . (expand-file-name "~/.emacs.d/.authinfo_2.gpg"))
-          (smtpmail-default-smtp-server . "smtp.gmail.com")
-          (smtpmail-smtp-server . "smtp.gmail.com")
-          (smtpmail-smtp-service . 587)
-          (smtpmail-debug-info . t)
-          ;;(smtpmail-debug-verbose . t)
-          (mu4e-maildir-shortcuts . ( ("/acc2-gmail/[acc2].Inbox"            . ?i)
-                      ("/acc2-gmail/[acc2].Sent Mail" . ?s)
-                      ("/acc2-gmail/[acc2].Trash"       . ?t)
-                      ("/acc2-gmail/[acc2].All Mail"  . ?a)
-                      ("/acc2-gmail/[acc2].Starred"   . ?r)
-                      ("/acc2-gmail/[acc2].Drafts"    . ?d)
-                      ))))))
+#   ;; enable inline images
+#   ;; This only works when w3m is not activated
+#   (setq mu4e-view-show-images t)
+
+#   ;; use imagemagick, if available
+#   (when (fboundp 'imagemagick-register-types)
+#     (imagemagick-register-types))
+
+#   ;; general emacs mail settings; used when composing e-mail
+#   ;; the non-mu4e-* stuff is inherited from emacs/message-mode
+#   ;;(setq mu4e-reply-to-address "emanoel.desousacosta@gmail.com"
+#   ;;    user-mail-address "emanoel.desousacosta@gmail.com"
+#   ;;    user-full-name  "Emanoel de Sousa Costa")
+
+#   ;; don't save message to Sent Messages, IMAP takes care of this
+#   ; (setq mu4e-sent-messages-behavior 'delete)
+
+#   ;; spell check
+#   ;;(add-hook 'mu4e-compose-mode-hook
+#   ;;        (defun my-do-compose-stuff ()
+#   ;;           "My settings for message composition."
+#   ;;           (set-fill-column 72)
+#   ;;           (flyspell-mode)))
+
+#   ;; spell check
+#   (add-hook 'mu4e-compose-mode-hook
+#       (defun my-do-compose-stuff ()
+#          "My settings for message composition."
+#          (visual-line-mode 1)
+#          (org-mu4e-compose-org-mode)
+#              (use-hard-newlines -1)
+#          (set-fill-column 72)
+#          (flyspell-mode)))
 
 
-  (require 'org-mu4e)
+#   (require 'smtpmail)
+#   ;;from the info manual
+#   (setq mu4e-attachment-dir  "~/Downloads")
 
-  ;; convert org mode to HTML automatically
-  (setq org-mu4e-convert-to-html t)
+#   ;;from vxlabs config
+#   ;; show full addresses in view message (instead of just names)
+#   ;; toggle per name with M-RET
+#   (setq mu4e-view-show-addresses 't)
 
-  (setq mu4e-change-filenames-when-moving t)
-  (setq mu4e-headers-skip-duplicates nil) ;; this line is needed for drafts to show properly
-  (mu4e t)
-#+END_SRC
+#   ;; don't ask when quitting
+#   (setq mu4e-confirm-quit nil)
+#   ;; mu4e-context
+#   (setq mu4e-context-policy 'pick-first)
+#   (setq mu4e-compose-context-policy 'always-ask)
+#   (setq mu4e-contexts
+#     (list
+#      (make-mu4e-context
+#       :name "college" ;;for acc1-gmail
+#       :enter-func (lambda () (mu4e-message "Entering context college"))
+#       :leave-func (lambda () (mu4e-message "Leaving context college"))
+#       :match-func (lambda (msg)
+#             (when msg
+#           (mu4e-message-contact-field-matches
+#            msg '(:from :to :cc :bcc) "emanoel.desousacosta@gmail.com")))
+#       :vars '((user-mail-address . "emanoel.desousacosta@gmail.com")
+#           (user-full-name . "Emanoel de Sousa Costa")
+#           (mu4e-sent-folder . "/acc1-gmail/[acc1].Sent Mail")
+#           (mu4e-drafts-folder . "/acc1-gmail/[acc1].Drafts")
+#           (mu4e-trash-folder . "/acc1-gmail/[acc1].Trash")
+#           (message-signature-file . "~/.emacs.d/.signature") ; put your signature in this file
+#           (mu4e-compose-format-flowed . t)
+#           (smtpmail-queue-dir . "~/Maildir/acc1-gmail/queue/cur")
+#           (message-send-mail-function . smtpmail-send-it)
+#           (smtpmail-smtp-user . "emanoel.desousacosta@gmail.com")
+#           ;; These two lines are no longer used, and onde must keep the .authinfo.gpg file with the cred for all accs in their ~/ dir
+#           ;;(smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+#           ;;(smtpmail-auth-credentials . (expand-file-name "~/.emacs.d/.authinfo.gpg"))
+#           (smtpmail-default-smtp-server . "smtp.gmail.com")
+#           (smtpmail-smtp-server . "smtp.gmail.com")
+#           (smtpmail-smtp-service . 587)
+#           (smtpmail-debug-info . t)
+#           ;;(smtpmail-debug-verbose . t)
+#           (mu4e-maildir-shortcuts . ( ("/acc1-gmail/[acc1].Inbox"            . ?i)
+#                       ("/acc1-gmail/[acc1].Sent Mail" . ?s)
+#                       ("/acc1-gmail/[acc1].Trash"       . ?t)
+#                       ("/acc1-gmail/[acc1].All Mail"  . ?a)
+#                       ("/acc1-gmail/[acc1].Starred"   . ?r)
+#                       ("/acc1-gmail/[acc1].Drafts"    . ?d)
+#                       ))))
+#      (make-mu4e-context
+#       :name "vic23" ;;for acc1-gmail
+#       :enter-func (lambda () (mu4e-message "Entering context vic23"))
+#       :leave-func (lambda () (mu4e-message "Leaving context vic23"))
+#       :match-func (lambda (msg)
+#             (when msg
+#           (mu4e-message-contact-field-matches
+#            msg '(:from :to :cc :bcc) "victoremanoel23@gmail.com")))
+#       :vars '((user-mail-address . "victoremanoel23@gmail.com")
+#           (user-full-name . "Emanoel de Sousa Costa")
+#           (mu4e-sent-folder . "/acc2-gmail/[acc2].Sent Mail")
+#           (mu4e-drafts-folder . "/acc2-gmail/[acc2].Drafts")
+#           (mu4e-trash-folder . "/acc2-gmail/[acc2].Trash")
+#           (message-signature-file . "~/.emacs.d/.signature") ; put your signature in this file
+#           (mu4e-compose-format-flowed . t)
+#           (smtpmail-queue-dir . "~/Maildir/acc2-gmail/queue/cur")
+#           (message-send-mail-function . smtpmail-send-it)
+#           (smtpmail-smtp-user . "victoremanoel23@gmail.com")
+#           ;; These two lines are no longer used, and onde must keep the .authinfo.gpg file with the cred for all accs in their ~/ dir
+#           ;;(smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+#           ;;(smtpmail-auth-credentials . (expand-file-name "~/.emacs.d/.authinfo_2.gpg"))
+#           (smtpmail-default-smtp-server . "smtp.gmail.com")
+#           (smtpmail-smtp-server . "smtp.gmail.com")
+#           (smtpmail-smtp-service . 587)
+#           (smtpmail-debug-info . t)
+#           ;;(smtpmail-debug-verbose . t)
+#           (mu4e-maildir-shortcuts . ( ("/acc2-gmail/[acc2].Inbox"            . ?i)
+#                       ("/acc2-gmail/[acc2].Sent Mail" . ?s)
+#                       ("/acc2-gmail/[acc2].Trash"       . ?t)
+#                       ("/acc2-gmail/[acc2].All Mail"  . ?a)
+#                       ("/acc2-gmail/[acc2].Starred"   . ?r)
+#                       ("/acc2-gmail/[acc2].Drafts"    . ?d)
+#                       ))))))
 
-* Mu4e-alert
-#+BEGIN_SRC emacs-lisp
-  ;; Configure desktop notifs for incoming emails:
-  (use-package mu4e-alert
-    :ensure t
-    :init
-    (defun perso--mu4e-notif ()
-      "Display both mode line and desktop alerts for incoming new emails."
-      (interactive)
-      (mu4e-update-mail-and-index 1)        ; getting new emails is ran in the background
-      (mu4e-alert-enable-mode-line-display) ; display new emails in mode-line
-      (mu4e-alert-enable-notifications))    ; enable desktop notifications for new emails
-    (defun perso--mu4e-refresh ()
-      "Refresh emails every 120 seconds and display desktop alerts."
-      (interactive)
-      (mu4e t)                            ; start silently mu4e (mandatory for mu>=1.3.8)
-      (run-with-timer 0 120 'perso--mu4e-notif))
-    :after mu4e
-    :bind ("<f2>" . perso--mu4e-refresh)  ; F2 turns Emacs into a mail client
-    :config
-    ;; Mode line alerts:
-    (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
-    ;; Desktop alerts:
-    (mu4e-alert-set-default-style 'libnotify)
-    (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
-    ;; Only notify for "interesting" (non-trashed) new emails:
-    (setq mu4e-alert-interesting-mail-query
-          (concat
-           ;;"flag:unread maildir:/acc1-gmail/[acc1].Inbox"
-           "flag:unread and maildir:/Inbox/"
-           " AND NOT flag:trashed")))
-#+END_SRC
+
+#   (require 'org-mu4e)
+
+#   ;; convert org mode to HTML automatically
+#   (setq org-mu4e-convert-to-html t)
+
+#   (setq mu4e-change-filenames-when-moving t)
+#   (setq mu4e-headers-skip-duplicates nil) ;; this line is needed for drafts to show properly
+#   (mu4e t)
+# #+END_SRC
+
+# * Mu4e-alert
+# #+BEGIN_SRC emacs-lisp
+#   ;; Configure desktop notifs for incoming emails:
+#   (use-package mu4e-alert
+#     :ensure t
+#     :init
+#     (defun perso--mu4e-notif ()
+#       "Display both mode line and desktop alerts for incoming new emails."
+#       (interactive)
+#       (mu4e-update-mail-and-index 1)        ; getting new emails is ran in the background
+#       (mu4e-alert-enable-mode-line-display) ; display new emails in mode-line
+#       (mu4e-alert-enable-notifications))    ; enable desktop notifications for new emails
+#     (defun perso--mu4e-refresh ()
+#       "Refresh emails every 120 seconds and display desktop alerts."
+#       (interactive)
+#       (mu4e t)                            ; start silently mu4e (mandatory for mu>=1.3.8)
+#       (run-with-timer 0 120 'perso--mu4e-notif))
+#     :after mu4e
+#     :bind ("<f2>" . perso--mu4e-refresh)  ; F2 turns Emacs into a mail client
+#     :config
+#     ;; Mode line alerts:
+#     (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+#     ;; Desktop alerts:
+#     (mu4e-alert-set-default-style 'libnotify)
+#     (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+#     ;; Only notify for "interesting" (non-trashed) new emails:
+#     (setq mu4e-alert-interesting-mail-query
+#           (concat
+#            ;;"flag:unread maildir:/acc1-gmail/[acc1].Inbox"
+#            "flag:unread and maildir:/Inbox/"
+#            " AND NOT flag:trashed")))
+# #+END_SRC
 
 * SLIME
 #+BEGIN_SRC emacs-lisp
@@ -531,4 +548,45 @@
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd-11"))
   (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'c++-mode-hook 'eglot-ensure)
+  (add-hook 'python-mode-hook 'eglot-ensure)
 #+end_src
+* Arduino mode
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/vendor/arduino-mode")
+  (setq auto-mode-alist (cons '("\\.\\(pde\\|ino\\)$" . arduino-mode) auto-mode-alist))
+  (autoload 'arduino-mode "arduino-mode" "Arduino editing mode." t)
+#+end_src
+
+* C style tweaks
+# #+begin_src emacs-lisp
+#   (defun c-lineup-arglist-tabs-only (ignored)
+#     "Line up argument lists by tabs, not spaces"
+#     (let* ((anchor (c-langelem-pos c-syntactic-element))
+#            (column (c-langelem-2nd-pos c-syntactic-element))
+#            (offset (- (1+ column) anchor))
+#            (steps (floor offset c-basic-offset)))
+#       (* (max steps 1)
+#          c-basic-offset)))
+
+#   (add-hook 'c-mode-common-hook
+#             (lambda ()
+#               ;; Add kernel style
+#               (c-add-style
+#                "linux-tabs-only"
+#                '("linux" (c-offsets-alist
+#                           (arglist-cont-nonempty
+#                            c-lineup-gcc-asm-reg
+#                            c-lineup-arglist-tabs-only))))))
+
+#   (add-hook 'c-mode-hook
+#             (lambda ()
+#               (let ((filename (buffer-file-name)))
+#                 ;; Enable kernel mode for the appropriate files
+#                 (when (and filename
+#                            (string-match (expand-file-name "~/src/linux-trees")
+#                                          filename))
+#                   (setq indent-tabs-mode t)
+#                   (setq show-trailing-whitespace t)
+#                   (c-set-style "linux-tabs-only")))))
+# #+end_src
+                
