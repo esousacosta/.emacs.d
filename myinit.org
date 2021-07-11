@@ -118,7 +118,7 @@
   ;;   (setq spacemacs-theme-org-agenda-height nil)
   ;;   (setq spacemacs-theme-org-height nil))
   (add-to-list 'default-frame-alist
-               '(font . "Monospace-12"))
+               '(font . "Monospace-10"))
 #+END_SRC
 
 * Ace window
@@ -193,26 +193,23 @@
 * Company
   #+BEGIN_SRC emacs-lisp
     ;;Installing company-mode for use with eglot
+    (add-to-list 'load-path "~/.emacs.d/company/")
     (use-package company
-        :ensure t
-        :config
-        (setq company-idle-delay 0)
-        :init
-        (add-hook 'after-init-hook 'global-company-mode))
+      :ensure t
+      :config 
+      (setq company-idle-delay 0)
+      (setq company-minimum-prefix-length 1)
+      (setq company-begin-commands '(self-insert-command))
+      :init
+      (add-hook 'after-init-hook 'global-company-mode))
 
+    (add-to-list 'company-backends 'company-web-html)
+    (add-to-list 'company-backends 'company-web-jade)
+    (add-to-list 'company-backends 'company-web-slim)
   #+END_SRC
-
-* Auto-complete 
+  
+* Line numbering
   #+BEGIN_SRC emacs-lisp
-;;(use-package auto-complete
-;;  :ensure t
-;;  :init
-;;  (progn
-;;	(ac-config-default)
-;;	(global-auto-complete-mode t)
-;;	(setq ac-mode (delq 'python-mode ac-modes))
-;;	))
-
 ;; Configuring the relative numbering that's so useful for evil-mode
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
@@ -235,7 +232,46 @@
 :ensure t)
 
   #+END_SRC
-  
+
+* Web mode
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/web-mode/")
+  (require 'web-mode)
+  (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-auto-closing t)
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-quoting t)
+  (setq web-mode-auto-close-style 2)
+
+  (define-key web-mode-map (kbd "C-c C-'") 'company-web-html)
+  (add-hook 'web-mode-hook (lambda ()
+                             (set (make-local-variable 'company-backends) '(company-web-html company-files))
+                             (company-mode t)))
+
+  ;; (defun my-web-mode-hook ()
+  ;;   "Hook for `web-mode'."
+  ;;   (set (make-local-variable 'company-backends)
+  ;;        '(
+  ;;          ;; company-css
+  ;;          ;; company-dabbrev
+  ;;          company-dabbrev-code
+  ;;          ;; company-files
+  ;;          company-yasnippet
+  ;;          company-web-html))
+  ;;   (company-quickhelp-mode 0))
+
+  ;; (add-hook 'web-mode-hook 'my-web-mode-hook)
+  ;; (add-hook 'web-mode-hook 'company-mode)
+#+end_src
+
 * Elpy
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
@@ -248,21 +284,22 @@
 
 * Yasnippet
   #+BEGIN_SRC emacs-lisp
-(use-package yasnippet
-	:ensure t
-	:defer 3.7
-	:hook ((lisp-interaction-mode . (lambda () (yas-minor-mode)))
-		(emacs-lisp-mode . (lambda () (yas-minor-mode)))
-		(org-mode . (lambda () (yas-minor-mode)))
-		(c++-mode . (lambda () (yas-minor-mode)))
-		(c-mode . (lambda () (yas-minor-mode)))
-		(arduino-mode . (lambda () (yas-minor-mode)))
-		(python-mode . (lambda () (yas-minor-mode)))))
+    (use-package yasnippet
+        :ensure t
+        :defer 3.7
+        :hook ((lisp-interaction-mode . (lambda () (yas-minor-mode)))
+            (emacs-lisp-mode . (lambda () (yas-minor-mode)))
+            (org-mode . (lambda () (yas-minor-mode)))
+            (c++-mode . (lambda () (yas-minor-mode)))
+            (c-mode . (lambda () (yas-minor-mode)))
+            (arduino-mode . (lambda () (yas-minor-mode)))
+            ;; (web-mode . (lambda () (yas-minor-mode)))
+            (python-mode . (lambda () (yas-minor-mode)))))
 
-(use-package yasnippet-snippets
-	:ensure t
-	:after yasnippet
-	:config (yas-reload-all))
+    (use-package yasnippet-snippets
+        :ensure t
+        :after yasnippet
+        :config (yas-reload-all))
   #+END_SRC
 
 * Magit
